@@ -1,14 +1,14 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import type { RunTimeLayoutConfig } from 'umi';
-import { history, Link } from 'umi';
+import { Link } from 'umi';
 import RightContent from '@/components/RightContent';
-import Footer from '@/components/Footer';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
+// import Footer from '@/components/Footer';
+// import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 
 const isDev = process.env.NODE_ENV === 'development';
-const loginPath = '/user/login';
+// const loginPath = '/user/login';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -23,26 +23,26 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
-  const fetchUserInfo = async () => {
-    try {
-      const msg = await queryCurrentUser();
-      return msg.data;
-    } catch (error) {
-      history.push(loginPath);
-    }
-    return undefined;
-  };
+  // const fetchUserInfo = async () => {
+  //   try {
+  //     const msg = await queryCurrentUser();
+  //     return msg.data;
+  //   } catch (error) {
+  //     history.push(loginPath);
+  //   }
+  //   return undefined;
+  // };
   // 如果是登录页面，不执行
-  if (history.location.pathname !== loginPath) {
-    const currentUser = await fetchUserInfo();
-    return {
-      fetchUserInfo,
-      currentUser,
-      settings: {},
-    };
-  }
+  // if (history.location.pathname !== loginPath) {
+  //   const currentUser = await fetchUserInfo();
+  //   return {
+  //     fetchUserInfo,
+  //     currentUser,
+  //     settings: {},
+  //   };
+  // }
   return {
-    fetchUserInfo,
+    // fetchUserInfo,
     settings: {},
   };
 }
@@ -50,18 +50,19 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
+    title: 'X',
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
       content: initialState?.currentUser?.name,
     },
-    footerRender: () => <Footer />,
+    // footerRender: () => <Footer />,
     onPageChange: () => {
-      const { location } = history;
+      // const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
-        history.push(loginPath);
-      }
+      // if (!initialState?.currentUser && location.pathname !== loginPath) {
+      //   history.push(loginPath);
+      // }
     },
     links: isDev
       ? [
