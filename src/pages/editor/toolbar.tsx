@@ -5,15 +5,15 @@ import styles from './Toolbar.less';
 const EditorToolbar = () => {
   return (
     <div className={styles.toolbar}>
-      <Draggable id="Button">
+      <Draggable id="button">
         <Button style={{ width: '100%' }} type="primary">
           Button
         </Button>
       </Draggable>
-      <Draggable id="Input">
+      <Draggable id="input">
         <Input></Input>
       </Draggable>
-      <Draggable id="Select">
+      <Draggable id="select">
         <Select style={{ width: '100%' }}>
           <Select.Option value="111">111</Select.Option>
         </Select>
