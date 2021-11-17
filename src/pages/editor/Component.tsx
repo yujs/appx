@@ -2,11 +2,11 @@ import Button from './components/Button';
 import styles from './Component.less';
 import { DeleteOutlined } from '@ant-design/icons';
 
-const BaseComponent = (props: { type: string; onClick: any; name: string }) => {
+const BaseComponent = (props: { type: string; onClick: any; name: string; base: any }) => {
   const getComponent = (type: string) => {
     switch (type) {
       case 'button':
-        return <Button name={props.name} />;
+        return <Button name={props.name} {...props.base} />;
     }
     return <></>;
   };

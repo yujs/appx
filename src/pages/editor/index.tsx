@@ -7,46 +7,53 @@ import SettingBar from './SettingBar';
 import ButtonDefaultProps from './model/Button';
 
 const Editor = () => {
-  const [componentProps, setComponentProps] = useState({});
-  const [components, setComponents] = useState<any>([]);
   const [componentIndex, setComponentIndex] = useState(0);
   const [activedComponent, setActivedComponent] = useState<string>();
+  const [componentData, setComponentData] = useState<any>([]);
 
-  console.log(componentProps);
+  const renderComponent = () => {
+    return componentData.map((item: any) => <BaseComponent {...item}></BaseComponent>);
+  };
+
+  const getComponentIndex = (key: string) => {
+    return componentData.map((item: any) => item.key).indexOf(key);
+  };
+
+  const current =
+    getComponentIndex(activedComponent) >= 0
+      ? componentData[getComponentIndex(activedComponent)].base
+      : {};
 
   return (
     <DndContext
       onDragEnd={(e) => {
         const type = e.active?.id;
         const index = componentIndex + 1;
-        const name = type + index;
-        setActivedComponent(name);
+        const key = type + index;
+        setActivedComponent(key);
         setComponentIndex(index);
-        const data = {
+        const newComponent = {
           type,
-          name,
+          key,
+          name: key,
+          base: { ...ButtonDefaultProps, key },
           onClick: (name: string) => {
             setActivedComponent(name);
           },
         };
-
-        setComponentProps({
-          ...componentProps,
-          [name]: ButtonDefaultProps,
-        });
-
-        setComponents([...components, <BaseComponent {...data}></BaseComponent>]);
+        setComponentData([...componentData, newComponent]);
       }}
     >
       <DragOverlay></DragOverlay>
       <div style={{ display: 'flex', position: 'relative' }}>
         <Toolbar />
-        <Content>{components.map((item: any) => item)}</Content>
+        <Content>{renderComponent()}</Content>
         <SettingBar
-          componentProps={activedComponent && componentProps[activedComponent]}
-          onChange={(e: any) =>
-            activedComponent && setComponentProps({ ...componentProps, [activedComponent]: e })
-          }
+          componentProps={current}
+          onChange={(e: any) => {
+            componentData[getComponentIndex(e.key)].base = e;
+            setComponentData([...componentData]);
+          }}
         ></SettingBar>
       </div>
     </DndContext>
