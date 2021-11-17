@@ -4,12 +4,12 @@ import Content from './Content';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import BaseComponent from './Component';
 import SettingBar from './SettingBar';
-import ButtonDefaultProps from './model/Button';
+import { getDefaultComponentProps } from './model';
 
 const Editor = () => {
   const [componentIndex, setComponentIndex] = useState(0);
-  const [activedComponent, setActivedComponent] = useState<string>();
   const [componentData, setComponentData] = useState<any>([]);
+  const [currentActivedProps, setCurrentActivedProps] = useState<any>();
 
   const renderComponent = () => {
     return componentData.map((item: any) => <BaseComponent {...item}></BaseComponent>);
@@ -19,10 +19,7 @@ const Editor = () => {
     return componentData.map((item: any) => item.key).indexOf(key);
   };
 
-  const current =
-    getComponentIndex(activedComponent) >= 0
-      ? componentData[getComponentIndex(activedComponent)].base
-      : {};
+  console.log('元数据：', componentData);
 
   return (
     <DndContext
@@ -30,17 +27,18 @@ const Editor = () => {
         const type = e.active?.id;
         const index = componentIndex + 1;
         const key = type + index;
-        setActivedComponent(key);
         setComponentIndex(index);
+        const base = { ...getDefaultComponentProps(type), key, conponentType: type };
         const newComponent = {
           type,
           key,
           name: key,
-          base: { ...ButtonDefaultProps, key },
-          onClick: (name: string) => {
-            setActivedComponent(name);
+          base,
+          onClick: (name: string, baseProps: any) => {
+            setCurrentActivedProps(baseProps);
           },
         };
+        setCurrentActivedProps(base);
         setComponentData([...componentData, newComponent]);
       }}
     >
@@ -49,7 +47,8 @@ const Editor = () => {
         <Toolbar />
         <Content>{renderComponent()}</Content>
         <SettingBar
-          componentProps={current}
+          componentType={currentActivedProps?.conponentType}
+          componentProps={currentActivedProps}
           onChange={(e: any) => {
             componentData[getComponentIndex(e.key)].base = e;
             setComponentData([...componentData]);
