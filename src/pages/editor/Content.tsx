@@ -3,7 +3,7 @@ import Droppable from './Droppable';
 
 const EditorContent = (props: any) => {
   return (
-    <Droppable className={styles.content} id="content">
+    <Droppable  id="content">
       {props.children}
     </Droppable>
   );

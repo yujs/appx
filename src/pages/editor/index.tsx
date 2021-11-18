@@ -5,6 +5,7 @@ import { DndContext, DragOverlay } from '@dnd-kit/core';
 import BaseComponent from './Component';
 import SettingBar from './SettingBar';
 import { getDefaultComponentProps } from './model';
+import CodePanel from './CodePanel';
 
 const Editor = () => {
   const [componentIndex, setComponentIndex] = useState(0);
@@ -45,7 +46,10 @@ const Editor = () => {
       <DragOverlay></DragOverlay>
       <div style={{ display: 'flex', position: 'relative' }}>
         <Toolbar />
-        <Content>{renderComponent()}</Content>
+        <div>
+          <Content>{renderComponent()}</Content>
+          <CodePanel></CodePanel>
+        </div>
         <SettingBar
           componentType={currentActivedProps?.conponentType}
           componentProps={currentActivedProps}
