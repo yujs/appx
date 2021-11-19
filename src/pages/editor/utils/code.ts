@@ -24,7 +24,25 @@ function generateComponentCode(props: any) {
   return '';
 }
 
-function generatePageCode(data: any[]) {
+const formatCode = async (code: string) => {
+  let formattedCode = `// 🚨 Your props contains invalid code`;
+
+  const prettier = await import('prettier/standalone');
+  const babylonParser = await import('prettier/parser-babylon');
+
+  try {
+    formattedCode = prettier.format(code, {
+      parser: 'babel',
+      plugins: [babylonParser],
+      semi: false,
+      singleQuote: true,
+    });
+  } catch (e) {}
+
+  return formattedCode;
+};
+
+export default async function generateCode(data: any[]) {
   let states = '';
   let events = '';
   let doms = '';
@@ -35,7 +53,7 @@ function generatePageCode(data: any[]) {
     doms += generateComponentCode(item);
   });
 
-  return `import { Input, Button } from 'antd';
+  const code = `import { Input, Button } from 'antd';
           import { useState } from 'react';
           const Page= () => {
              ${states}
@@ -43,4 +61,6 @@ function generatePageCode(data: any[]) {
              return (<>${doms}</>);
           };
           export default Page;`;
+
+  return await formatCode(code);
 }
